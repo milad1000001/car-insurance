@@ -1,55 +1,49 @@
+import { Button, Card, Form, Input, Space, Typography } from "antd";
+const { Title, Paragraph } = Typography
+
 export function Inquiry() {
   return (
-    <main className="min-h-screen bg-slate-50 py-10 px-4">
-      <div className="mx-auto w-full max-w-2xl space-y-6">
-        <header className="space-y-2">
-          <h1 className="text-2xl font-semibold text-slate-900">
-            استعلام بیمه خودرو
-          </h1>
-          <p className="text-sm text-slate-600">
-            شماره پلاک را وارد کنید تا اطلاعات خودرو و مالک نمایش داده شود.
-          </p>
-        </header>
+    <main style={{ minHeight: "100vh", padding: "40px 16px" }}>
+      <div style={{ margin: "0 auto", maxWidth: 720, width: "100%" }}>
+        <Space vertical size={24} style={{ width: "100%" }}>
+          <header>
+            <Title level={2} style={{ marginBottom: 8 }}>
+              استعلام بیمه خودرو
+            </Title>
+            <Paragraph type="secondary" style={{ marginBottom: 0 }}>
+              شماره پلاک را وارد کنید تا اطلاعات خودرو و مالک نمایش داده شود.
+            </Paragraph>
+          </header>
 
-        <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-          <form className="space-y-4">
-            <div className="space-y-2">
-              <label
-                htmlFor="plate"
-                className="text-sm font-medium text-slate-700"
-              >
-                شماره پلاک
-              </label>
-              <input
-                id="plate"
-                name="plate"
-                type="text"
-                placeholder="۱۲الف۳۴۵-۶۷"
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none ring-slate-400 focus:ring-2"
-              />
-              <p className="text-xs text-slate-500">
-                ارقام فارسی و انگلیسی پشتیبانی می‌شود.
-              </p>
-            </div>
+          <section>
+            <Card>
+              <Form layout="vertical">
+                <Form.Item
+                  label="شماره پلاک"
+                  name="plate"
+                  extra="ارقام فارسی و انگلیسی پشتیبانی می‌شود."
+                >
+                  <Input placeholder="۱۲الف۳۴۵-۶۷" />
+                </Form.Item>
+                <Button type="primary" htmlType="submit">
+                  دریافت قیمت بیمه
+                </Button>
+              </Form>
+            </Card>
+          </section>
 
-            <button
-              type="submit"
-              className="inline-flex items-center justify-center rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800"
-            >
-              دریافت قیمت بیمه
-            </button>
-          </form>
-        </section>
-
-        <section className="rounded-xl border border-dashed border-slate-300 bg-white p-4">
-          <h2 className="text-sm font-semibold text-slate-800">
-            نتیجه (نمونه)
-          </h2>
-          <p className="mt-2 text-sm text-slate-600">
-            پس از ثبت شماره پلاک، اطلاعات خودرو و قیمت بیمه در این بخش نمایش
-            داده می‌شود.
-          </p>
-        </section>
+          <section>
+            <Card>
+              <Title level={5} style={{ marginTop: 0 }}>
+                نتیجه (نمونه)
+              </Title>
+              <Paragraph type="secondary" style={{ marginBottom: 0 }}>
+                پس از ثبت شماره پلاک، اطلاعات خودرو و قیمت بیمه در این بخش نمایش
+                داده می‌شود.
+              </Paragraph>
+            </Card>
+          </section>
+        </Space>
       </div>
     </main>
   );

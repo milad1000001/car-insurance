@@ -1,5 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ConfigProvider } from "antd";
 import { useState } from "react";
+import { antdTheme } from "./styles/antdTheme";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -16,7 +18,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {children}
+      <ConfigProvider direction="rtl" theme={antdTheme}>
+        {children}
+      </ConfigProvider>
     </QueryClientProvider>
   );
 }
