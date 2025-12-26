@@ -1,15 +1,26 @@
 import { Button, Card, Flex, Form, Input, Space, Typography, type InputRef } from "antd";
 import { Car, Search, ShieldCheck } from "lucide-react";
 import { useEffect, useRef } from "react";
+import { maskPlate, normalizePlate } from "../../../core/domain/plate";
 const { Title, Paragraph } = Typography;
 
 export function Inquiry() {
+  const [form] = Form.useForm();
   const inputRef = useRef<InputRef>(null);
 
   useEffect(() => {
     if (!inputRef.current) return;
     inputRef.current.focus({ cursor: "start" });
   }, []);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    form.setFieldValue("plate", maskPlate(event.target.value));
+  };
+
+  const handleSubmit = (values: { plate?: string }) => {
+    const normalized = normalizePlate(values.plate ?? "");
+    form.setFieldsValue({ plate: normalized });
+  };
 
   return (
     <main style={{ minHeight: "100vh", padding: "40px 16px" }}>
@@ -29,7 +40,7 @@ export function Inquiry() {
 
           <section>
             <Card>
-              <Form layout="vertical">
+              <Form form={form} layout="vertical" onFinish={handleSubmit}>
                 <Form.Item
                   label="شماره پلاک"
                   name="plate"
@@ -38,6 +49,7 @@ export function Inquiry() {
                   <Input.Search
                     placeholder="۱۲الف۳۴۵-۶۷"
                     size="large"
+                    onChange={handleChange}
                     ref={inputRef}
                   />
                 </Form.Item>
