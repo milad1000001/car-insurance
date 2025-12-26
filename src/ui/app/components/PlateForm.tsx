@@ -15,6 +15,7 @@ export function PlateForm({ form, onSubmit, onChange, inputRef }: PlateFormProps
       <Form.Item
         label="شماره پلاک"
         name="plate"
+        rules={[{ required: true, message: "شماره پلاک را وارد کنید." }]}
       >
         <Input.Search
           placeholder="۱۲الف۳۴۵-۶۷"
@@ -23,7 +24,7 @@ export function PlateForm({ form, onSubmit, onChange, inputRef }: PlateFormProps
           ref={inputRef}
         />
       </Form.Item>
-      <Button type="primary" htmlType="submit" size="large">
+      <Button type="primary" htmlType="submit" size="large" style={{ marginTop: 12 }}>
         <Search size={18} />
         دریافت قیمت بیمه
       </Button>

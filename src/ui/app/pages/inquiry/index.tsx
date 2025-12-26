@@ -5,7 +5,17 @@ import { maskPlate, normalizePlate } from "@core/domain/plate";
 import { useInquiryQuery } from "@core/api/inquiry/inquiry.queries";
 import { PlateForm } from "@ui/app/components/PlateForm";
 import { InquiryPreview } from "@ui/app/components/InquiryPreview";
+import { HistoryList } from "@ui/app/components/HistoryList";
+import { calculateInsurancePrice } from "@core/domain/insurance";
+import { loadHistory, saveHistory, type InquiryHistoryRecord } from "@core/domain/history";
+import type { InquiryResponse } from "@core/api/inquiry";
 const { Title, Paragraph } = Typography;
+
+const createHistoryRecord = (data: InquiryResponse): InquiryHistoryRecord => ({
+  plate: data.plate,
+  ownerName: data.owner.full_name,
+  price: calculateInsurancePrice(data.make_date),
+});
 
 export function Inquiry() {
   const [form] = Form.useForm();
@@ -13,21 +23,42 @@ export function Inquiry() {
   const [plate, setPlate] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const { data, isLoading, isError } = useInquiryQuery(plate, submitted);
+  const [history, setHistory] = useState<InquiryHistoryRecord[]>(() => loadHistory());
+  const lastSavedPlate = useRef<string | null>(null);
+
+  useEffect(() => {
+    saveHistory(history);
+  }, [history]);
+
+  useEffect(() => {
+    const isNotSubmitted = !submitted;
+    const hasNoData = !data;
+    const isDuplicate = lastSavedPlate.current === data?.plate;
+
+    if (isNotSubmitted || hasNoData || isDuplicate) return;
+    setHistory((prev) => [createHistoryRecord(data), ...prev]);
+    lastSavedPlate.current = data.plate;
+  }, [data, submitted]);
 
   useEffect(() => {
     if (!inputRef.current) return;
     inputRef.current.focus({ cursor: "start" });
   }, []);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onPlateFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     form.setFieldValue("plate", maskPlate(event.target.value));
   };
 
-  const handleSubmit = (values: { plate?: string }) => {
+  const onPlateFormSubmit = (values: { plate?: string }) => {
     const normalized = normalizePlate(values.plate ?? "");
     form.setFieldsValue({ plate: normalized });
     setPlate(normalized);
     setSubmitted(true);
+    form.setFieldsValue({ plate: "" });
+  };
+
+  const onRemoveHistory = (id: Id) => {
+    setHistory((prev) => prev.filter((item) => item.id !== id));
   };
 
   return (
@@ -50,8 +81,8 @@ export function Inquiry() {
             <Card>
               <PlateForm
                 form={form}
-                onSubmit={handleSubmit}
-                onChange={handleChange}
+                onSubmit={onPlateFormSubmit}
+                onChange={onPlateFormChange}
                 inputRef={inputRef}
               />
             </Card>
@@ -64,6 +95,15 @@ export function Inquiry() {
                 isLoading={isLoading}
                 isError={isError}
                 data={data}
+              />
+            </Card>
+          </section>
+
+          <section>
+            <Card title="سوابق استعلام">
+              <HistoryList
+                items={history}
+                onRemove={onRemoveHistory}
               />
             </Card>
           </section>
