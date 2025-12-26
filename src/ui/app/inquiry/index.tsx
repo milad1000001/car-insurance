@@ -1,7 +1,8 @@
-import { Button, Card, Flex, Form, Input, Space, Typography, type InputRef } from "antd";
-import { Car, Search, ShieldCheck } from "lucide-react";
+import { Card, Flex, Form, Space, Typography, type InputRef } from "antd";
+import { Car, ShieldCheck } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { maskPlate, normalizePlate } from "../../../core/domain/plate";
+import { PlateForm } from "../components/PlateForm";
 const { Title, Paragraph } = Typography;
 
 export function Inquiry() {
@@ -40,24 +41,12 @@ export function Inquiry() {
 
           <section>
             <Card>
-              <Form form={form} layout="vertical" onFinish={handleSubmit}>
-                <Form.Item
-                  label="شماره پلاک"
-                  name="plate"
-                  extra="ارقام فارسی و انگلیسی پشتیبانی می‌شود."
-                >
-                  <Input.Search
-                    placeholder="۱۲الف۳۴۵-۶۷"
-                    size="large"
-                    onChange={handleChange}
-                    ref={inputRef}
-                  />
-                </Form.Item>
-                <Button type="primary" htmlType="submit" size="large">
-                  <Search size={18} />
-                  دریافت قیمت بیمه
-                </Button>
-              </Form>
+              <PlateForm
+                form={form}
+                onSubmit={handleSubmit}
+                onChange={handleChange}
+                inputRef={inputRef}
+              />
             </Card>
           </section>
 
