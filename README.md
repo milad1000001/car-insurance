@@ -1,4 +1,4 @@
-# Vehicle Insurance Inquiry (Frontend)
+# Vehicle Insurance Inquiry
 
 Single-page app for vehicle insurance inquiry using a Mockoon API.
 
