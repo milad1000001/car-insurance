@@ -1,5 +1,5 @@
 import type { Route } from "./+types/inquiry";
-import { Inquiry } from "../inquiry";
+import { Inquiry } from "../pages/inquiry";
 
 export function meta({ }: Route.MetaArgs) {
   return [

@@ -1,13 +1,20 @@
 import { Card, Flex, Form, Space, Typography, type InputRef } from "antd";
 import { Car, ShieldCheck } from "lucide-react";
-import { useEffect, useRef } from "react";
-import { maskPlate, normalizePlate } from "../../../core/domain/plate";
-import { PlateForm } from "../components/PlateForm";
+import { useEffect, useRef, useState } from "react";
+import { maskPlate, normalizePlate } from "@core/domain/plate";
+import { useInquiryQuery } from "@core/api/inquiry/inquiry.queries";
+import { PlateForm } from "@ui/app/components/PlateForm";
+import { InquiryPreview } from "@ui/app/components/InquiryPreview";
 const { Title, Paragraph } = Typography;
 
 export function Inquiry() {
   const [form] = Form.useForm();
   const inputRef = useRef<InputRef>(null);
+  const [plate, setPlate] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const { data, isLoading, isError } = useInquiryQuery(plate, submitted);
+
+
 
   useEffect(() => {
     if (!inputRef.current) return;
@@ -21,6 +28,8 @@ export function Inquiry() {
   const handleSubmit = (values: { plate?: string }) => {
     const normalized = normalizePlate(values.plate ?? "");
     form.setFieldsValue({ plate: normalized });
+    setPlate(normalized);
+    setSubmitted(true);
   };
 
   return (
@@ -52,16 +61,12 @@ export function Inquiry() {
 
           <section>
             <Card>
-              <Title level={5} style={{ marginTop: 0 }}>
-                <Space size={8} align="center">
-                  <ShieldCheck size={18} />
-                  نتیجه (نمونه)
-                </Space>
-              </Title>
-              <Paragraph type="secondary" style={{ marginBottom: 0 }}>
-                پس از ثبت شماره پلاک، اطلاعات خودرو و قیمت بیمه در این بخش نمایش
-                داده می‌شود.
-              </Paragraph>
+              <InquiryPreview
+                submitted={submitted}
+                isLoading={isLoading}
+                isError={isError}
+                data={data}
+              />
             </Card>
           </section>
         </Flex>

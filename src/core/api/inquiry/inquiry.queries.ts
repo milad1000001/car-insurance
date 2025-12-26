@@ -1,12 +1,9 @@
-import { queryOptions } from "@tanstack/react-query";
-import { inquiryCarByPlate, type InquiryResponse } from '../inquiry'
+import { useQuery } from "@tanstack/react-query";
+import { inquiryCarByPlate } from '../inquiry'
 
-export const getInquiryQuary = (plate: string) =>
-  queryOptions({
-    queryKey: [],
-    queryFn: async (): Promise<InquiryResponse> => {
-      const res = await inquiryCarByPlate({ plate });
-      return res.data;
-    }
-  }
-  )
+export const useInquiryQuery = (plate: string, enabled = false) =>
+  useQuery({
+    queryKey: ["inquiry", plate],
+    queryFn: () => inquiryCarByPlate({ plate }).then((res) => res.data),
+    enabled: enabled && plate.length > 0,
+  });

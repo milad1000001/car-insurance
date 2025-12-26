@@ -15,7 +15,10 @@
     "rootDirs": [".", "./.react-router/types"],
     "baseUrl": ".",
     "paths": {
-      "~/*": ["src/ui/app/*"]
+      "~/*": ["src/ui/app/*"],
+      "@src/*": ["src/*"],
+      "@ui/*": ["src/ui/*"],
+      "@core/*": ["src/core/*"]
     },
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,
