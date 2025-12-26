@@ -12,6 +12,7 @@ import type { InquiryResponse } from "@core/api/inquiry";
 const { Title, Paragraph } = Typography;
 
 const createHistoryRecord = (data: InquiryResponse): InquiryHistoryRecord => ({
+  id: String(Math.random()).slice(2, 1),
   plate: data.plate,
   ownerName: data.owner.full_name,
   price: calculateInsurancePrice(data.make_date),
@@ -57,7 +58,7 @@ export function Inquiry() {
     form.setFieldsValue({ plate: "" });
   };
 
-  const onRemoveHistory = (id: Id) => {
+  const onRemoveHistory = (id: string) => {
     setHistory((prev) => prev.filter((item) => item.id !== id));
   };
 

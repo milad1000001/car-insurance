@@ -1,4 +1,5 @@
 export type InquiryHistoryRecord = {
+  id: string
   plate: string;
   ownerName: string;
   price: number;
