@@ -1,14 +1,26 @@
-import { Button, Card, Form, Input, Space, Typography } from "antd";
-const { Title, Paragraph } = Typography
+import { Button, Card, Flex, Form, Input, Space, Typography, type InputRef } from "antd";
+import { Car, Search, ShieldCheck } from "lucide-react";
+import { useEffect, useRef } from "react";
+const { Title, Paragraph } = Typography;
 
 export function Inquiry() {
+  const inputRef = useRef<InputRef>(null);
+
+  useEffect(() => {
+    if (!inputRef.current) return;
+    inputRef.current.focus({ cursor: "start" });
+  }, []);
+
   return (
     <main style={{ minHeight: "100vh", padding: "40px 16px" }}>
       <div style={{ margin: "0 auto", maxWidth: 720, width: "100%" }}>
-        <Space vertical size={24} style={{ width: "100%" }}>
+        <Flex vertical gap={12} style={{ width: "100%" }}>
           <header>
             <Title level={2} style={{ marginBottom: 8 }}>
-              استعلام بیمه خودرو
+              <Flex gap={12} align="center">
+                <Car size={32} />
+                استعلام بیمه خودرو
+              </Flex>
             </Title>
             <Paragraph type="secondary" style={{ marginBottom: 0 }}>
               شماره پلاک را وارد کنید تا اطلاعات خودرو و مالک نمایش داده شود.
@@ -23,9 +35,14 @@ export function Inquiry() {
                   name="plate"
                   extra="ارقام فارسی و انگلیسی پشتیبانی می‌شود."
                 >
-                  <Input placeholder="۱۲الف۳۴۵-۶۷" />
+                  <Input.Search
+                    placeholder="۱۲الف۳۴۵-۶۷"
+                    size="large"
+                    ref={inputRef}
+                  />
                 </Form.Item>
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="submit" size="large">
+                  <Search size={18} />
                   دریافت قیمت بیمه
                 </Button>
               </Form>
@@ -35,7 +52,10 @@ export function Inquiry() {
           <section>
             <Card>
               <Title level={5} style={{ marginTop: 0 }}>
-                نتیجه (نمونه)
+                <Space size={8} align="center">
+                  <ShieldCheck size={18} />
+                  نتیجه (نمونه)
+                </Space>
               </Title>
               <Paragraph type="secondary" style={{ marginBottom: 0 }}>
                 پس از ثبت شماره پلاک، اطلاعات خودرو و قیمت بیمه در این بخش نمایش
@@ -43,7 +63,7 @@ export function Inquiry() {
               </Paragraph>
             </Card>
           </section>
-        </Space>
+        </Flex>
       </div>
     </main>
   );
