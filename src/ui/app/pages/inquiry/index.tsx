@@ -1,5 +1,5 @@
 import { Card, Flex, Form, Space, Typography, type InputRef } from "antd";
-import { Car, ShieldCheck } from "lucide-react";
+import { Car } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { maskPlate, normalizePlate } from "@core/domain/plate";
 import { useInquiryQuery } from "@core/api/inquiry/inquiry.queries";
@@ -13,8 +13,6 @@ export function Inquiry() {
   const [plate, setPlate] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const { data, isLoading, isError } = useInquiryQuery(plate, submitted);
-
-
 
   useEffect(() => {
     if (!inputRef.current) return;

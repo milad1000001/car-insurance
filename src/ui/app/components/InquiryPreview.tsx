@@ -1,5 +1,7 @@
-import { Descriptions, Typography } from "antd";
+import { Descriptions, Skeleton, Typography } from "antd";
 import type { InquiryResponse } from "@core/api/inquiry";
+import { formatInsurancePrice, formatPersianDate } from "@core/domain/format";
+import { useEffect, useState } from "react";
 
 const { Paragraph } = Typography;
 
@@ -16,12 +18,18 @@ export function InquiryPreview({
   isError,
   data,
 }: InquiryPreviewProps) {
+  const [formattedDate, setFormattedDate] = useState("");
+  const [formattedPrice, setFormattedPrice] = useState("");
 
-  const formattedDate = data?.make_date
-    ? new Intl.DateTimeFormat("fa-IR", { dateStyle: "medium" }).format(
-      new Date(data.make_date)
-    )
-    : "";
+  useEffect(() => {
+    if (!data?.make_date) {
+      setFormattedDate("");
+      setFormattedPrice("");
+      return;
+    }
+    setFormattedDate(formatPersianDate(data.make_date));
+    setFormattedPrice(formatInsurancePrice(data.make_date));
+  }, [data?.make_date]);
 
   if (!submitted) {
     return (
@@ -34,7 +42,7 @@ export function InquiryPreview({
   if (isLoading) {
     return (
       <Paragraph type="secondary" style={{ marginBottom: 0 }}>
-        در حال دریافت اطلاعات...
+        <Skeleton active paragraph={{ rows: 5 }} />
       </Paragraph>
     );
   }
@@ -54,7 +62,12 @@ export function InquiryPreview({
       <Descriptions.Item label="پلاک">{data.plate}</Descriptions.Item>
       <Descriptions.Item label="برند">{data.brand}</Descriptions.Item>
       <Descriptions.Item label="مدل">{data.model}</Descriptions.Item>
-      <Descriptions.Item label="تاریخ ساخت">{formattedDate}</Descriptions.Item>
+      <Descriptions.Item label="تاریخ ساخت">
+        {formattedDate || "-"}
+      </Descriptions.Item>
+      <Descriptions.Item label="قیمت بیمه سالانه">
+        {formattedPrice || "-"}
+      </Descriptions.Item>
       <Descriptions.Item label="نام مالک">{data.owner.full_name}</Descriptions.Item>
       <Descriptions.Item label="کد ملی">{data.owner.national_id}</Descriptions.Item>
     </Descriptions>
