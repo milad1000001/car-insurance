@@ -1,0 +1,95 @@
+openapi: 3.0.3
+info:
+  title: Shoraka Interview Mock API
+  version: "1.0.0"
+  description: Inquiry car using plate
+
+servers:
+  - url: http://localhost:3000
+    description: Local mock server
+
+paths:
+  /api/inquiry/:
+    get:
+      summary: Inquiry car using plate
+      operationId: inquiryCarByPlate
+      parameters:
+        - name: plate
+          in: query
+          required: true
+          description: >
+            Vehicle plate. Must match the mock server rule regex:
+            ^\d{2}(?:[s|d|ا-ی])\d{3}-\d{2}$
+          schema:
+            type: string
+            pattern: "^\\d{2}(?:[s|d|ا-ی])\\d{3}-\\d{2}$"
+            example: "12s345-67"
+      responses:
+        "200":
+          description: Car inquiry result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InquiryResponse"
+              examples:
+                example:
+                  value:
+                    plate: "12s345-67"
+                    brand: "Toyota"
+                    model: "Corolla"
+                    make_date: "2012-04-18T10:22:33.000Z"
+                    owner:
+                      full_name: "Jane Doe"
+                      national_id: "0012345678"
+        "404":
+          description: Not found (fallback when plate doesn't match rule or no default response)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                invalidPlate:
+                  value:
+                    message: "Not Found"
+
+components:
+  schemas:
+    InquiryResponse:
+      type: object
+      required: [plate, brand, model, make_date, owner]
+      properties:
+        plate:
+          type: string
+          description: Echoed query param (or "unknown" in mock if missing)
+          example: "12s345-67"
+        brand:
+          type: string
+          example: "Toyota"
+        model:
+          type: string
+          example: "Corolla"
+        make_date:
+          type: string
+          format: date-time
+          description: Past date (mock-generated)
+          example: "2012-04-18T10:22:33.000Z"
+        owner:
+          type: object
+          required: [full_name, national_id]
+          properties:
+            full_name:
+              type: string
+              example: "Jane Doe"
+            national_id:
+              type: string
+              description: Matches 00[1-9]{8} in the mock generator
+              pattern: "^00[1-9]\\d{8}$"
+              example: "0012345678"
+
+    Error:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+          example: "Not Found"
